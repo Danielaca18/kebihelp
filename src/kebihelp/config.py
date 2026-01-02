@@ -40,6 +40,7 @@ class Config:
                 "layout": {
                     "n_columns": 3,
                     "spacing": 3,
+                    "tab_columns": 5,
                     "background_color": "#282C34",
                     "opacity": 0.95,
                     "tabs": {
