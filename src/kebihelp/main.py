@@ -52,6 +52,9 @@ def main():
         dest="watch_update",
         help="Import all watched paths",
     )
+    parser_watch.add_argument(
+        "-t", "--tab", dest="watch_tab", help="Tab name for the added path"
+    )
 
     parser_show = subparsers.add_parser("show", help="Show the keybindings")
     parser_show.add_argument("-t", "--tab", dest="show_tab", help="Show only this tab")
@@ -92,13 +95,13 @@ def main():
             config.config["Sources"] = {}
 
         if args.watch_add:
-            config.config["Sources"][args.watch_add] = {}
+            config.config["Sources"][args.watch_add] = args.watch_tab
             config.save()
             print(f"Path added to sources: {args.watch_add}")
 
         if args.watch_list:
-            src_list = config.config["Sources"].keys()
-            if not src_list:
+            src_list = config.config["Sources"]
+            if not src_list.keys():
                 print("No paths are currently being watched.")
             else:
                 print("Currently watched paths:")
@@ -106,9 +109,9 @@ def main():
                     print(f" - {path}")
 
         if args.watch_update:
-            src_list = config.config["Sources"].keys()
-            for source in src_list:
-                parsers = Parsers(None, source)
+            src_list = config.config["Sources"]
+            for source in src_list.keys():
+                parsers = Parsers(src_list[source], source)
                 parsers.import_bindings()
 
     if args.command == "show":
