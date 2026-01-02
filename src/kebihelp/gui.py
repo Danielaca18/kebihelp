@@ -122,10 +122,11 @@ class MainWindow(QMainWindow):
 
         # 2. Create a new widget to hold ONLY the shortcuts (the stacked widget)
         self.shortcut_container = QWidget()
+        self.shortcut_container.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
         self.shortcut_layout = QVBoxLayout(self.shortcut_container)
         self.shortcut_layout.setContentsMargins(0, 0, 0, 0)
         self.shortcut_layout.addWidget(self.stacked_widget)
-        self.shortcut_layout.addStretch()
+        # self.shortcut_layout.addStretch()
 
         # 3. Initialize the scroll area and set the container as its widget
         self.scroll_area = QScrollArea()
@@ -136,6 +137,8 @@ class MainWindow(QMainWindow):
         self.scroll_area.setStyleSheet(
             "QScrollBar {width: 0px;} QScrollArea {border: none;}"
         )
+
+        self.shortcut_layout.setSizeConstraint(QLayout.SetMinimumSize)
 
         # 4. Add the scroll area to the main layout (below the tabs)
         self.window_layout.addWidget(self.scroll_area)
@@ -259,7 +262,8 @@ class MainWindow(QMainWindow):
             block_layout.addLayout(group_label)
             for line in group["lines"]:
                 block_layout.addLayout(line)
-            block_layout.addStretch()
+            block_layout.addSpacing(10)
+            # block_layout.addStretch()
             grid_layout.addLayout(block_layout, current_row, current_column)
             current_column += 1
 
@@ -269,7 +273,8 @@ class MainWindow(QMainWindow):
         # columns_layout = QHBoxLayout()
         grid_layout.setVerticalSpacing(10)
         grid_layout.setHorizontalSpacing(30)
-        grid_layout.setRowStretch(grid_layout.rowCount(), 1)
+        grid_layout.setAlignment(Qt.AlignTop)
+        # grid_layout.setRowStretch(grid_layout.rowCount(), 1)
         widget.setLayout(grid_layout)
         return widget
 
@@ -356,18 +361,11 @@ class MainWindow(QMainWindow):
             self.change_tab(new_index)
 
         if event.key() == QKeySequence(self.keymap["scroll_down"]):
-            if (
-                self.scroll_area.verticalScrollBar().value()
-                < self.scroll_area.verticalScrollBar().maximum()
-            ):
-                self.scroll_area.verticalScrollBar().setValue(
-                    self.scroll_area.verticalScrollBar().value()
-                    + self.scroll_area.verticalScrollBar().singleStep()
-                )
+            bar = self.scroll_area.verticalScrollBar()
+            if bar.value() < bar.maximum():
+                bar.setValue(bar.value() + bar.singleStep())
 
         if event.key() == QKeySequence(self.keymap["scroll_up"]):
-            if self.scroll_area.verticalScrollBar().value() > 0:
-                self.scroll_area.verticalScrollBar().setValue(
-                    self.scroll_area.verticalScrollBar().value()
-                    - self.scroll_area.verticalScrollBar().singleStep()
-                )
+            bar = self.scroll_area.verticalScrollBar()
+            if bar.value() > 0:
+                bar.setValue(bar.value() - bar.singleStep())
