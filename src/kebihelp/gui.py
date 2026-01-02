@@ -100,7 +100,6 @@ class MainWindow(QMainWindow):
         )
 
         self.setWindowOpacity(self.layout["opacity"])
-
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
         self.main_widget = QWidget(self)
 
@@ -113,23 +112,39 @@ class MainWindow(QMainWindow):
         for tab_name, tab_config in self.keybindings.items():
             if "_hidden" in tab_config and tab_config["_hidden"] == True:
                 continue
-            # if self.current_tab_name != tab_name:
-            #     continue
             widget = self.get_tab_shortcuts(tab_name)
             self.stacked_widget.addWidget(widget)
 
+        # --- SURGICAL CHANGE STARTS HERE ---
+
+        # 1. Add the tabs layout to the window as usual
         self.window_layout.addLayout(self.tabs_layout)
-        self.window_layout.addWidget(self.stacked_widget)
-        # self.window_layout.setSizeConstraint(QVBoxLayout.SetMinimumSize)
-        self.window_layout.addStretch()
-        self.main_widget.setLayout(self.window_layout)
-        # self.setCentralWidget(self.main_widget)
+
+        # 2. Create a new widget to hold ONLY the shortcuts (the stacked widget)
+        self.shortcut_container = QWidget()
+        self.shortcut_layout = QVBoxLayout(self.shortcut_container)
+        self.shortcut_layout.setContentsMargins(0, 0, 0, 0)
+        self.shortcut_layout.addWidget(self.stacked_widget)
+        self.shortcut_layout.addStretch()
+
+        # 3. Initialize the scroll area and set the container as its widget
         self.scroll_area = QScrollArea()
-        self.scroll_area.setWidget(self.main_widget)
+        self.scroll_area.setWidget(self.shortcut_container)  # Only shortcuts scroll!
+
         self.scroll_area.setFocusPolicy(Qt.NoFocus)
         self.scroll_area.setWidgetResizable(True)
-        self.scroll_area.setStyleSheet("QScrollBar {width:  0px;}")
-        self.setCentralWidget(self.scroll_area)
+        self.scroll_area.setStyleSheet(
+            "QScrollBar {width: 0px;} QScrollArea {border: none;}"
+        )
+
+        # 4. Add the scroll area to the main layout (below the tabs)
+        self.window_layout.addWidget(self.scroll_area)
+
+        # 5. Finalize the main widget layout
+        self.main_widget.setLayout(self.window_layout)
+        self.setCentralWidget(self.main_widget)
+
+        # --- SURGICAL CHANGE ENDS HERE ---
 
         width = 900
         if "width" in self.layout:
