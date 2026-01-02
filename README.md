@@ -106,7 +106,9 @@ The syntax to add an import source, update from all source and list all sources 
   kebihelp watch -l         # List watchlist sources
 ```
 
-####
+### Clear Keybindings
+
+The command `kebihelp clear` will remove all existing keybinding from kebihelp.
 
 ### Displaying keybindings (CLI)
 
