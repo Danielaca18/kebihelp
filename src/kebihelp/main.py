@@ -34,6 +34,25 @@ def main():
 
     parser_clear = subparsers.add_parser("clear", help="Clear/Remove existing bindings")
 
+    parser_watch = subparsers.add_parser("watch", help="Manage and update import paths")
+    parser_watch.add_argument(
+        "-a", dest="watch_add", help="Add a directory to the watch list"
+    )
+    parser_watch.add_argument(
+        "-l",
+        "--list",
+        action="store_true",
+        dest="watch_list",
+        help="List all watched paths",
+    )
+    parser_watch.add_argument(
+        "-u",
+        "--update",
+        action="store_true",
+        dest="watch_update",
+        help="Import all watched paths",
+    )
+
     parser_show = subparsers.add_parser("show", help="Show the keybindings")
     parser_show.add_argument("-t", "--tab", dest="show_tab", help="Show only this tab")
     parser_show.add_argument(
@@ -66,6 +85,31 @@ def main():
         config = Config()
         config.config["Keybindings"] = {}
         config.save()
+
+    if args.command == "watch":
+        config = Config()
+        if "Sources" not in config.config:
+            config.config["Sources"] = {}
+
+        if args.watch_add:
+            config.config["Sources"][args.watch_add] = {}
+            config.save()
+            print(f"Path added to sources: {args.watch_add}")
+
+        if args.watch_list:
+            src_list = config.config["Sources"].keys()
+            if not src_list:
+                print("No paths are currently being watched.")
+            else:
+                print("Currently watched paths:")
+                for path in src_list:
+                    print(f" - {path}")
+
+        if args.watch_update:
+            src_list = config.config["Sources"].keys()
+            for source in src_list:
+                parsers = Parsers(None, source)
+                parsers.import_bindings()
 
     if args.command == "show":
         app = QApplication(sys.argv)
