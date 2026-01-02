@@ -51,7 +51,7 @@ class Config:
                         "padding": 0,
                     },
                     "group_name": {
-                        "background_color": "#FF0000",
+                        "background_color": "##81A1C1",
                         "color": "#000000",
                         "bold": True,
                         "stretched": False,
