@@ -78,6 +78,7 @@ class Config:
             },
             "Rules": {"default": "default"},
             "Keybindings": {},
+            "Sources": {},
         }
 
     def save(self):
