@@ -7,6 +7,7 @@ Kebihelp is an universal key-bindings helper for Linux, written in Python and in
 Click on the picture to zoom.
 
 In this demo:
+
 - <F1> displays the helper
 - <TAB> key is used to cycle through the tabs.
 - <ESC> or <q> is used to close it
@@ -51,7 +52,7 @@ When the helper is launched with the `kebihelp show`, you can navigate through t
 
 Instead of entering manually each keybinding, you can import them from text files or from [Quickref](https://quickref.me)
 
-The syntax to import is as follows: 
+The syntax to import is as follows:
 
 ```
 kebihelp import -t <destination_tab> -s <path>
@@ -60,9 +61,8 @@ kebihelp import -t <destination_tab> -s <path>
 - If the path is an URL starting with `https://quickref.me/`, the corresponding Quickref keybindings will be imported.
 - If the path is a local directory, all files will be analyzed recursively to search for keybindings to add, according to the following syntax:
 
-
 ```
-::Group name::Key binding::Description::
+::Tab name::Group name::Key binding::Description::
 ```
 
 Example:
@@ -75,11 +75,11 @@ These can be anywhere in your various files. Example for Nvim:
 
 ![](docs/nvim_example.png)
 
-You can also create a text file anywhere with your keybindings. This is what I did to register key bindings for Yazi (a command-line file manager): 
+You can also create a text file anywhere with your keybindings. This is what I did to register key bindings for Yazi (a command-line file manager):
 
 ![](docs/yazi_example.png)
 
-Once imported, you can reorganize or modify the imported keybindings by editing the `$HOME/.config/kebihelp.json` file. 
+Once imported, you can reorganize or modify the imported keybindings by editing the `$HOME/.config/kebihelp.json` file.
 
 #### Customizing the format of keybindings
 
@@ -94,6 +94,19 @@ In the configuration file `kebihelp.json`, you are free to change the format of 
     },
 ```
 
+### Watchlist
+
+Extending the import function, the watchlist allows users to store and manage multiple import sources.
+
+The syntax to add an import source, update from all source and list all sources will be listed below respectively:
+
+```
+  kebihelp watch -a <path>  # Add path to watchlist
+  kebihelp watch -u         # Update from watchlist
+  kebihelp watch -l         # List watchlist sources
+```
+
+####
 
 ### Displaying keybindings (CLI)
 
@@ -110,19 +123,20 @@ kebihelp list -t Hyprland
 
 ### Displaying keybindings (GUI)
 
-To show a window with all keybindings, just type `kebihelp show`. 
+To show a window with all keybindings, just type `kebihelp show`.
 
 If you use a tiling window-manager, it's recommended to add a rule to set this window in floating mode.
 
 Once displayed, you can navigate through the tabs by using the `<TAB>` key, and you can close the window using the `<Esc>` or `q` key.
 
-The `show` command accepts also the option `-t <tab>` to display directory a particular tab instead of the default one. 
+The `show` command accepts also the option `-t <tab>` to display directory a particular tab instead of the default one.
 
 ### Rules
 
 In the `kebihelp.json` file, you can define rules to show a particular tab depending of the current focus. For instance, if you are in a Nvim session and you launch Kebihelp with a keybinding, it will show directly the "Nvim" keybindings.
 
 Example:
+
 ```
  "Rules": {
     "_default": "Hyprland",
@@ -134,7 +148,8 @@ Here, the default tab will be the keybindings for Hyprland. However, if you are 
 
 To determine the current focused Window name, Kebihelp uses a command that you'll have to define in the `Parameters`. The command you set up should return one single line with the information you want.
 
-Example: 
+Example:
+
 ```
 {
   "Parameters": {
@@ -156,10 +171,9 @@ Instead of removing them entirely from your `kebihelp.json`, you can hide a tab,
 You can configure the visual aspect of the GUI helper:
 
 - Font name and size of any part
-- Colors 
+- Colors
 
 To do that, edit the `kebihelp.json` config file.
-
 
 ### Size of the window
 
@@ -176,7 +190,7 @@ These parameters are important: depending of the size of the Window and the numb
 
 ### Remap default keys
 
-By default, the following keys are configured: 
+By default, the following keys are configured:
 
 | Key | Function |
 |-----|----------|
